@@ -12,11 +12,14 @@ dependencies {
     // Kotlin-specific dependencies
     implementation platform('org.jetbrains.kotlin:kotlin-bom')
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.21"
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 
+
     // CLI library
     implementation("com.github.ajalt.clikt:clikt:3.1.0")
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.21"
 }
 
 application {
