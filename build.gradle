@@ -6,7 +6,16 @@ plugins {
 repositories {
     jcenter()
     mavenCentral()
+    maven { url "https://dl.bintray.com/arrow-kt/arrow-kt/" }
 }
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+def arrow_version = "0.11.0"
 
 dependencies {
     // Kotlin-specific dependencies
@@ -16,10 +25,18 @@ dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 
-
     // CLI library
     implementation("com.github.ajalt.clikt:clikt:3.1.0")
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.21"
+
+    // JSON parser
+    implementation("com.squareup.moshi:moshi:1.11.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
+
+    // Functional library
+    implementation "io.arrow-kt:arrow-core:$arrow_version"
+    implementation "io.arrow-kt:arrow-syntax:$arrow_version"
+
 }
 
 application {

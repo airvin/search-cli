@@ -1,22 +1,40 @@
 package search.cli
 
+import arrow.core.Left
+import arrow.core.Right
+import arrow.core.flatMap
 import com.github.ajalt.clikt.output.TermUi
 import kotlin.reflect.full.memberProperties
 
-fun promptStateMachineInit() {
-    val introSelection = getIntroSelection()
-    val entitySelection = getEntitySelection(introSelection == 2)
-    handleSearchOptions(entitySelection)
+class PromptStateMachine(
+        val organizations: List<Organization>,
+        val users: List<User>,
+        val tickets: List<Ticket>
+) {
+
+    fun init() {
+        val introSelection = getIntroSelection()
+        val entitySelection = getEntitySelection(introSelection == 2)
+        handleSearchOptions(entitySelection)
+    }
+
+    fun handleSearchOptions(entity: String) {
+        val searchTerm = getSearchTerm(entity)
+        val searchValue = getSearchValue(searchTerm, entity)
+        val results = search(entity, searchTerm, searchValue, organizations, users, tickets).flatMap { matchedEntities ->
+            when(entity) {
+                "Organization" -> Right(matchedEntities + matchedEntities.map { findEntitiesRelatedToOrg(users, tickets, it as Organization) })
+                "User" -> Right(matchedEntities +  matchedEntities.map { findEntitiesRelatedToUser(organizations, tickets, it as User) })
+                "Ticket" -> Right(matchedEntities + matchedEntities.map{ findEntitiesRelatedToTicket(organizations, users, it as Ticket) })
+                else -> Left(Error("No entity of type $entity"))
+            }
+        }.fold({it.message}, {it.toString()})
+        println(results)
+        val resetSelection = getResetSelection(entity)
+        if (resetSelection == 1) handleSearchOptions(entity) else init()
+    }
 }
 
-fun handleSearchOptions(entitySelection: String) {
-    val searchTerm = getSearchTerm(entitySelection)
-    val searchValue = getSearchValue(searchTerm, entitySelection) 
-    val results = getResults(searchValue, searchTerm, entitySelection)
-    println(results)
-    val promptResetSelection = getResetSelection(entitySelection)
-    if (promptResetSelection == 1) handleSearchOptions(entitySelection) else promptStateMachineInit()
-}
 
 fun getIntroSelection(init: Boolean = true): Int {
     val introduction = "Welcome to Zendesk Search!\n" +

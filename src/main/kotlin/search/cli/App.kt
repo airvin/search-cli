@@ -1,14 +1,20 @@
 package search.cli
 
+import arrow.core.Either
+import arrow.core.Right
+import arrow.core.flatMap
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.core.UsageError
-import com.github.ajalt.clikt.output.TermUi
 
 class App : CliktCommand() {
+
+
+    val organizations = loadFile("Organization", "organizations") as List<Organization>
+    val users = loadFile("User", "users") as List<User>
+    val tickets = loadFile("Ticket", "tickets") as List<Ticket>
+
     override fun run() {
-        // TODO: load data from files
-        
-        promptStateMachineInit()
+        val prompt = PromptStateMachine(organizations, users, tickets)
+        prompt.init()
     }
 }
 
