@@ -1,5 +1,15 @@
 package search.cli
 
+enum class Entity {
+    USER, TICKET, ORGANIZATION;
+
+    companion object {
+        val values = values().map { it.toString().toLowerCase().capitalize() }
+        // TODO: import arrow to use the either type for error handling here
+        fun getByInt(i: Int) = values().getOrNull(i-1)
+    }
+}
+
 data class Organization(
         val _id: String,
         val url: String,

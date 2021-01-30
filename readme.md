@@ -20,7 +20,7 @@ This will build an executable called `search-cli` in the
 The `search-cli` executable can be run with:
 
 ```
-./build/install/search-cli/bin/search-cli <query>
+make run
 ```
 
 ## Overview of application

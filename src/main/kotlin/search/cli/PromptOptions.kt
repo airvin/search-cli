@@ -6,9 +6,6 @@ import kotlin.reflect.full.memberProperties
 class PromptOptions {
     companion object {
 
-        // TODO: make this an enum
-        val ENTITY_TYPES = listOf("User", "Ticket", "Organization")
-
         val INTRODUCTION = "Welcome to Zendesk Search!\n" +
                 "Type 'ctrl+c' at any time to exit\n"
 
@@ -16,21 +13,22 @@ class PromptOptions {
                 "       * Press 1 to search Zendesk\n" +
                 "       * Press 2 to view searchable fields\n"
 
-        // TODO: derive this string from ENTITY_TYPES
-        val ENTITY_SELECTION = "Select 1) Users, 2) Organizations, 3) Tickets"
+        val ENTITY_SELECTION = "Select entity to search \n${Entity.values.mapIndexed {i, it -> "${i+1}) $it\n"}
+                .reduce { acc, it -> acc + it }}"
 
         val ENTITY_SEARCH_OPTIONS = "Enter search term or hit enter to view fields for "
-        
+
     }
 }
 
+
 fun promptStateMachineInit() {
-    val initialOption = getIntroSelection()
-    val entitySelection = getEntitySelection(initialOption)
+    val introSelection = getIntroSelection()
+    val entitySelection = getEntitySelection(introSelection == 2)
     handleSearchOptions(entitySelection)
 }
 
-fun handleSearchOptions(entitySelection: Int) {
+fun handleSearchOptions(entitySelection: Entity) {
     val searchTerm = getSearchTerm(entitySelection)
     val searchValue = getSearchValue(searchTerm, entitySelection) 
     val resetSelection = getResults(searchValue, searchTerm, entitySelection)
@@ -48,24 +46,28 @@ fun getIntroSelection(init: Boolean = true): Int {
     }
 }
 
-fun getEntitySelection(introSelection: Int): Int {
-    val promptText = if (introSelection == 2) {
-        PromptOptions.ENTITY_TYPES.map { printSearchableFields(it) }
+fun getEntitySelection(displayFields: Boolean): Entity {
+    val promptText = if (displayFields) {
+        Entity.values.map { printSearchableFields(it) }
                 .reduce {acc, it -> acc + it} + "\n" + PromptOptions.ENTITY_SELECTION
     } else {
         PromptOptions.ENTITY_SELECTION
     }
     val entitySelection = TermUi.prompt(promptText)
 
-    return if (entitySelection == null || entitySelection.toIntOrNull() == null) {
-        getEntitySelection(1)
+    return if (entitySelection == null
+            || entitySelection.toIntOrNull() == null
+            || entitySelection.toInt() > Entity.values().size
+            || Entity.getByInt(entitySelection.toInt()) == null
+    ) {
+        getEntitySelection(false)
     } else {
-        entitySelection.toInt()
+        Entity.getByInt(entitySelection.toInt())!!
     }
 }
 
-fun getSearchTerm(entityType: Int): String {
-    val searchTerm = TermUi.prompt(PromptOptions.ENTITY_SEARCH_OPTIONS + entityType)
+fun getSearchTerm(entityType: Entity): String {
+    val searchTerm = TermUi.prompt(PromptOptions.ENTITY_SEARCH_OPTIONS + entityType.toString().toLowerCase().capitalize())
     return if (searchTerm == null || !isValidSearchTerm(searchTerm, entityType)) {
         // TODO: display fields for entityType
         getSearchTerm(entityType)
@@ -74,9 +76,9 @@ fun getSearchTerm(entityType: Int): String {
     }
 }
 
-fun getSearchValue(searchTerm: String, entitySelection: Int): String = "TODO"
+fun getSearchValue(searchTerm: String, entitySelection: Entity): String = "TODO"
 
-fun getResults(searchValue: String, searchTerm: String, entitySelection: Int): Int = 1
+fun getResults(searchValue: String, searchTerm: String, entitySelection: Entity): Int = 1
 
 /* In order to make this application extensible, the property names that can be
 searched on should not be hard coded.
@@ -94,4 +96,4 @@ fun printSearchableFields(entityType: String): String {
     return "$header $entityProperties \n"
 }
 
-fun isValidSearchTerm(searchTerm: String, entityType: Int): Boolean = true
+fun isValidSearchTerm(searchTerm: String, entityType: Entity): Boolean = true
