@@ -77,8 +77,39 @@ machine can be visualised as follows: ![SMD](state_machine_diagram.jpg)
 The data structures of Organizations, Users and Tickets are ones that may be
 subject to change in the future. For example, new fields may be required or
 fields may become obsolete. It is also possible that entirely new entity types
-may need to be defined in future. Therefore, care has been taken to avoid
-hardcoding properties of these data structures wherever possible.
+may need to be defined in future. Therefore, reflection has been used
+extensively throughout this application to examine the properties of classes at
+runtime without having to hardcode them. Examples of this can be seen in the
+`loadFile()` function in `FileIo`, `createIndex()` function in `Indexes` and
+`printSearchableFields()` function in `Search`.
+
+While it was necessary in places to hardcode logic relating to the
+Organizations, Users and Tickets, all efforts were made to keep this isolated to
+specific areas of the code (for example, in describing the relationships between
+the entities in the `Search` file). In all other places, the `EntityEnum` class
+was used in order to be sure that all classes of entity were handled
+appropriately.
+
+### Error Handling
+
+This codebase uses functional programming principles as much as possible. A
+functional library for Kotlin, called [Arrow](https://arrow-kt.io/docs/core/) is
+used for error handling with the `Either` type.
+
+Conventions:
+
+- Use immutable state.
+- Catch exceptions as close as possible to their source and convert to [Arrow's
+  `Either`
+  type](https://arrow-kt.io/docs/apidocs/arrow-core-data/arrow.core/-either/).
+- Implement functions as expressions. Functions that produce errors can be composed
+  using `map`, `flatMap` and `fold`. Avoid statements with side effects in functions.
+- Use recursion over loops.
+
+Example Gists:
+
+- [How to catch exceptions and convert to and Either type](https://gist.github.com/airvin/79f1fb2a3821a9e5d227db3ee9561f42).
+- [Using flatMap to compose functions that return Eithers](https://gist.github.com/airvin/3bfae1f3e622e466ba9072b53684555a).
 
 ## Testing
 
