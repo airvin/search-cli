@@ -90,8 +90,5 @@ make test
 
 ## TODO
 
-- Index null and empty string fields
-- Allow user to enter empty string for search value
-- Index flattened fields (i.e. tags and domain names)
 - Include `assignee_id` and `referrer_id` in the user-ticket relationship search
 - Implement integration tests for the prompt

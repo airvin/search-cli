@@ -27,7 +27,17 @@ fun prettyPrintResults(
         searchTerm: String,
         searchValue: String
 ) {
-    println("\nSearching $entityType by $searchTerm $searchValue returned ${matchedEntities.size} results\n")
+    val ANSI_CYAN = "\u001B[36m"
+    val ANSI_GREEN = "\u001B[32m";
+    val ANSI_RESET = "\u001B[0m"
+    val ANSI_BLUE = "\u001B[34m";
+    val ANSI_PURPLE = "\u001B[35m";
+
+    if (searchValue == "NULL_OR_EMPTY") {
+        println("\n${ANSI_CYAN}Searching ${entityType.toString().toLowerCase().capitalize()} with an empty $searchTerm field returned ${matchedEntities.size} results $ANSI_RESET \n")
+    } else {
+        println("\n${ANSI_CYAN}Searching ${entityType.toString().toLowerCase().capitalize()} by $searchTerm $searchValue returned ${matchedEntities.size} results $ANSI_RESET \n")
+    }
     if (matchedEntities.size > 0) {
         val (relatedTypeOne, relatedTypeTwo) = when (entityType) {
             EntityEnum.ORGANIZATION -> listOf("Users, Tickets")
@@ -35,11 +45,11 @@ fun prettyPrintResults(
             EntityEnum.TICKET -> listOf("Organizations", "Users")
         }
         matchedEntities.mapIndexed { i, it ->
-            println("********************${entityType.toString().toLowerCase().capitalize()} ${i+1}********************\n")
+            println("$ANSI_GREEN********************${entityType.toString().toLowerCase().capitalize()} ${i+1}********************$ANSI_RESET\n")
             println("$it \n")
-            println("----------Related ${relatedTypeOne}----------\n")
+            if (relatedEntities[i].first.size > 0 ) println("$ANSI_BLUE----------Related ${relatedTypeOne}----------$ANSI_RESET\n")
             relatedEntities[i].first.map { relatedEntitiesOne[it]!! }.map { println("$it \n") }
-            println("----------Related ${relatedTypeTwo}----------\n")
+            if (relatedEntities[i].second.size > 0 ) println("$ANSI_PURPLE----------Related ${relatedTypeTwo}----------$ANSI_RESET\n")
             relatedEntities[i].second.map { relatedEntitiesTwo[it]!! }.map { println("$it \n") }
         }
     }

@@ -48,12 +48,12 @@ class Prompt(
 
 
 fun getIntroSelection(init: Boolean = true): Int {
-    val introduction = "Welcome to Zendesk Search!\n" +
+    val introduction = "\nWelcome to Zendesk Search!\n" +
             "Type 'ctrl+c' at any time to exit\n"
 
-    val intro_selection = "       Select search option:\n" +
+    val intro_selection = "\n       Select search option:\n" +
             "       * Press 1 to search Zendesk\n" +
-            "       * Press 2 to view searchable fields\n"
+            "       * Press 2 to view searchable fields\n\n"
 
     val introText = if (init) introduction else ""
     val initialSelection = TermUi.prompt(introText + intro_selection)
@@ -67,7 +67,7 @@ fun getIntroSelection(init: Boolean = true): Int {
 
 fun getEntitySelection(displayFields: Boolean): EntityEnum {
     // Get the list of entity types from the EntityEnum class and print as a numbered list
-    val entitySelectionText = "Select entity to search \n${EntityEnum.values.mapIndexed {i, it -> "${i+1}) $it\n"}
+    val entitySelectionText = "\nSelect entity to search \n${EntityEnum.values.mapIndexed {i, it -> "${i+1}) $it\n"}
             .reduce { acc, it -> acc + it }}"
 
     // Get the searchable fields for each entity if the user has chosen to see the field options
@@ -91,7 +91,7 @@ fun getEntitySelection(displayFields: Boolean): EntityEnum {
 
 fun getSearchTerm(entity: String, displayFields: Boolean = false): String {
     val entityFields = if (displayFields) printSearchableFields(entity) else ""
-    val searchTerm = TermUi.prompt("${entityFields}Enter search term for $entity", "")
+    val searchTerm = TermUi.prompt("${entityFields}\nEnter search term for $entity", "")
     return if (searchTerm.isNullOrEmpty() || !isValidSearchTerm(searchTerm, entity)) {
         getSearchTerm(entity, true)
     } else {
@@ -100,7 +100,7 @@ fun getSearchTerm(entity: String, displayFields: Boolean = false): String {
 }
 
 fun getSearchValue(searchTerm: String, entity: String): String {
-    val searchValue = TermUi.prompt("Enter search value for $entity $searchTerm")
+    val searchValue = TermUi.prompt("\nEnter search value for $entity $searchTerm", default = "NULL_OR_EMPTY", showDefault = false)
     return if (searchValue.isNullOrEmpty()) getSearchValue(searchTerm, entity) else searchValue
 }
 
