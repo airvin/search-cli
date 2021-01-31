@@ -2,7 +2,7 @@ package search.cli
 
 
 enum class EntityEnum {
-    USER, TICKET, ORGANIZATION;
+    ORGANIZATION, USER, TICKET;
 
     companion object {
         val values = values().map { it.toString().toLowerCase().capitalize() }

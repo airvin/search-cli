@@ -10,38 +10,36 @@ class IndexesTest {
         val organizations = createMockOrganizations()
         val organizationIndex = createIndex("Organization", organizations)
 
-        assertTrue(!organizationIndex.isEmpty())
+        assertTrue(organizationIndex.isRight())
+        organizationIndex.map {
+            assertTrue(it.containsKey("_id"))
+            assertNotNull(it["_id"])
+            assertTrue(it["_id"]!!.containsKey("001"))
+            assertTrue(it["_id"]!!["001"]!!.contains("001"))
 
-        assertTrue(organizationIndex.containsKey("_id"))
-        assertNotNull(organizationIndex["_id"])
-        assertTrue(organizationIndex["_id"]!!.containsKey("001"))
-        assertTrue(organizationIndex["_id"]!!["001"]!!.contains("001"))
+            assertTrue(it.containsKey("name"))
+            assertNotNull(it["name"])
+            assertTrue(it["name"]!!.containsKey("AliceCorp"))
+            assertTrue(it["name"]!!["AliceCorp"]!!.contains("001"))
 
-        assertTrue(organizationIndex.containsKey("name"))
-        assertNotNull(organizationIndex["name"])
-        assertTrue(organizationIndex["name"]!!.containsKey("AliceCorp"))
-        assertTrue(organizationIndex["name"]!!["AliceCorp"]!!.contains("001"))
+            assertTrue(it.containsKey("tags"))
+            assertNotNull(it["tags"])
+            assertTrue(it["tags"]!!.containsKey("Fulton"))
+            assertTrue(it["tags"]!!["Fulton"]!!.contains("001"))
+            assertTrue(it["tags"]!!["Fulton"]!!.contains("002"))
 
-        // TODO: Fix createIndex to flatten lists of strings (i.e. for tags and domain names)
-        assertTrue(organizationIndex.containsKey("tags"))
-        assertNotNull(organizationIndex["tags"])
-//        assertTrue(organizationIndex["tags"]!!.containsKey("Fulton"))
-//        assertTrue(organizationIndex["tags"]!!["Fulton"]!!.contains("001"))
-//        assertTrue(organizationIndex["tags"]!!["Fulton"]!!.contains("002"))
+            assertTrue(it.containsKey("details"))
+            assertNotNull(it["details"])
+            assertTrue(it["details"]!!.containsKey("NULL_OR_EMPTY"))
+            assertTrue(it["details"]!!["NULL_OR_EMPTY"]!!.contains("001"))
+            assertTrue(it["details"]!!["NULL_OR_EMPTY"]!!.contains("002"))
 
-        // TODO: Fix createIndex to store null fields
-        assertTrue(organizationIndex.containsKey("details"))
-        assertNotNull(organizationIndex["details"])
-//        assertTrue(organizationIndex["details"]!!.containsKey(""))
-//        assertTrue(organizationIndex["details"]!![""]!!.contains("001"))
-//        assertTrue(organizationIndex["details"]!![""]!!.contains("002"))
-
-        // TODO: Fix createIndex to store fields with empty strings
-        assertTrue(organizationIndex.containsKey("external_id"))
-        assertNotNull(organizationIndex["external_id"])
-//        assertTrue(organizationIndex["external_id"]!!.containsKey(""))
-//        assertTrue(organizationIndex["external_id"]!![""]!!.contains("001"))
-//        assertTrue(organizationIndex["external_id"]!![""]!!.contains("002"))
+            assertTrue(it.containsKey("external_id"))
+            assertNotNull(it["external_id"])
+            assertTrue(it["external_id"]!!.containsKey("NULL_OR_EMPTY"))
+            assertTrue(it["external_id"]!!["NULL_OR_EMPTY"]!!.contains("001"))
+            assertTrue(it["external_id"]!!["NULL_OR_EMPTY"]!!.contains("002"))
+        }
     }
 
     @Test fun testCreatingUserIndex() {
@@ -49,38 +47,36 @@ class IndexesTest {
         val users = createMockUsers()
         val userIndex = createIndex("User", users)
 
-        assertTrue(!userIndex.isEmpty())
+        assertTrue(userIndex.isRight())
+        userIndex.map {
+            assertTrue(it.containsKey("_id"))
+            assertNotNull(it["_id"])
+            assertTrue(it["_id"]!!.containsKey("0001"))
+            assertTrue(it["_id"]!!["0001"]!!.contains("0001"))
 
-        assertTrue(userIndex.containsKey("_id"))
-        assertNotNull(userIndex["_id"])
-        assertTrue(userIndex["_id"]!!.containsKey("0001"))
-        assertTrue(userIndex["_id"]!!["0001"]!!.contains("0001"))
+            assertTrue(it.containsKey("name"))
+            assertNotNull(it["name"])
+            assertTrue(it["name"]!!.containsKey("Alice"))
+            assertTrue(it["name"]!!["Alice"]!!.contains("0001"))
 
-        assertTrue(userIndex.containsKey("name"))
-        assertNotNull(userIndex["name"])
-        assertTrue(userIndex["name"]!!.containsKey("Alice"))
-        assertTrue(userIndex["name"]!!["Alice"]!!.contains("0001"))
+            assertTrue(it.containsKey("tags"))
+            assertNotNull(it["tags"])
+            assertTrue(it["tags"]!!.containsKey("Fulton"))
+            assertTrue(it["tags"]!!["Fulton"]!!.contains("0001"))
+            assertTrue(it["tags"]!!["Fulton"]!!.contains("0002"))
 
-        // TODO: Fix createIndex to flatten lists of strings (i.e. for tags and domain names)
-        assertTrue(userIndex.containsKey("tags"))
-        assertNotNull(userIndex["tags"])
-//        assertTrue(userIndex["tags"]!!.containsKey("Fulton"))
-//        assertTrue(userIndex["tags"]!!["Fulton"]!!.contains("0001"))
-//        assertTrue(userIndex["tags"]!!["Fulton"]!!.contains("0002"))
+            assertTrue(it.containsKey("alias"))
+            assertNotNull(it["alias"])
+            assertTrue(it["alias"]!!.containsKey("NULL_OR_EMPTY"))
+            assertTrue(it["alias"]!!["NULL_OR_EMPTY"]!!.contains("0001"))
+            assertTrue(it["alias"]!!["NULL_OR_EMPTY"]!!.contains("0002"))
 
-        // TODO: Fix createIndex to store null fields
-        assertTrue(userIndex.containsKey("alias"))
-        assertNotNull(userIndex["alias"])
-//        assertTrue(userIndex["alias"]!!.containsKey(""))
-//        assertTrue(userIndex["alias"]!![""]!!.contains("0001"))
-//        assertTrue(userIndex["alias"]!![""]!!.contains("0002"))
-
-        // TODO: Fix createIndex to store fields with empty strings
-        assertTrue(userIndex.containsKey("signature"))
-        assertNotNull(userIndex["signature"])
-//        assertTrue(userIndex["signature"]!!.containsKey(""))
-//        assertTrue(userIndex["signature"]!![""]!!.contains("0001"))
-//        assertTrue(userIndex["signature"]!![""]!!.contains("0002"))
+            assertTrue(it.containsKey("signature"))
+            assertNotNull(it["signature"])
+            assertTrue(it["signature"]!!.containsKey("NULL_OR_EMPTY"))
+            assertTrue(it["signature"]!!["NULL_OR_EMPTY"]!!.contains("0001"))
+            assertTrue(it["signature"]!!["NULL_OR_EMPTY"]!!.contains("0002"))
+        }
     }
 
     @Test fun testCreatingTicketIndex() {
@@ -88,39 +84,38 @@ class IndexesTest {
         val tickets = createMockTickets()
         val ticketIndex = createIndex("Ticket", tickets)
 
-        assertTrue(!ticketIndex.isEmpty())
+        assertTrue(ticketIndex.isRight())
 
-        assertTrue(ticketIndex.containsKey("_id"))
-        assertNotNull(ticketIndex["_id"])
-        assertTrue(ticketIndex["_id"]!!.containsKey("00001"))
-        assertTrue(ticketIndex["_id"]!!["00001"]!!.contains("00001"))
+        ticketIndex.map {
+            assertTrue(it.containsKey("_id"))
+            assertNotNull(it["_id"])
+            assertTrue(it["_id"]!!.containsKey("00001"))
+            assertTrue(it["_id"]!!["00001"]!!.contains("00001"))
 
-        assertTrue(ticketIndex.containsKey("subject"))
-        assertNotNull(ticketIndex["subject"])
-        assertTrue(ticketIndex["subject"]!!.containsKey("AliceIssue"))
-        assertTrue(ticketIndex["subject"]!!["AliceIssue"]!!.contains("00001"))
-        assertTrue(ticketIndex["subject"]!!.containsKey("BobIssue"))
-        assertTrue(ticketIndex["subject"]!!["BobIssue"]!!.contains("00002"))
+            assertTrue(it.containsKey("subject"))
+            assertNotNull(it["subject"])
+            assertTrue(it["subject"]!!.containsKey("AliceIssue"))
+            assertTrue(it["subject"]!!["AliceIssue"]!!.contains("00001"))
+            assertTrue(it["subject"]!!.containsKey("BobIssue"))
+            assertTrue(it["subject"]!!["BobIssue"]!!.contains("00002"))
 
-        // TODO: Fix createIndex to flatten lists of strings (i.e. for tags and domain names)
-        assertTrue(ticketIndex.containsKey("tags"))
-        assertNotNull(ticketIndex["tags"])
-//        assertTrue(ticketIndex["tags"]!!.containsKey("American Samoa"))
-//        assertTrue(ticketIndex["tags"]!!["American Samoa"]!!.contains("00001"))
-//        assertTrue(ticketIndex["tags"]!!["American Samoa"]!!.contains("00002"))
+            assertTrue(it.containsKey("tags"))
+            assertNotNull(it["tags"])
+            assertTrue(it["tags"]!!.containsKey("American Samoa"))
+            assertTrue(it["tags"]!!["American Samoa"]!!.contains("00001"))
+            assertTrue(it["tags"]!!["American Samoa"]!!.contains("00002"))
 
-        // TODO: Fix createIndex to store null fields
-        assertTrue(ticketIndex.containsKey("via"))
-        assertNotNull(ticketIndex["via"])
-//        assertTrue(ticketIndex["via"]!!.containsKey(""))
-//        assertTrue(ticketIndex["via"]!![""]!!.contains("00001"))
-//        assertTrue(ticketIndex["via"]!![""]!!.contains("00002"))
+            assertTrue(it.containsKey("via"))
+            assertNotNull(it["via"])
+            assertTrue(it["via"]!!.containsKey("NULL_OR_EMPTY"))
+            assertTrue(it["via"]!!["NULL_OR_EMPTY"]!!.contains("00001"))
+            assertTrue(it["via"]!!["NULL_OR_EMPTY"]!!.contains("00002"))
 
-        // TODO: Fix createIndex to store fields with empty strings
-        assertTrue(ticketIndex.containsKey("description"))
-        assertNotNull(ticketIndex["description"])
-//        assertTrue(ticketIndex["description"]!!.containsKey(""))
-//        assertTrue(ticketIndex["description"]!![""]!!.contains("00001"))
-//        assertTrue(ticketIndex["description"]!![""]!!.contains("00002"))
+            assertTrue(it.containsKey("description"))
+            assertNotNull(it["description"])
+            assertTrue(it["description"]!!.containsKey("NULL_OR_EMPTY"))
+            assertTrue(it["description"]!!["NULL_OR_EMPTY"]!!.contains("00001"))
+            assertTrue(it["description"]!!["NULL_OR_EMPTY"]!!.contains("00002"))
+        }
     }
 }

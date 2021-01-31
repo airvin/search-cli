@@ -1,6 +1,24 @@
 package search.cli
 
+import arrow.core.*
+import arrow.core.extensions.either.applicative.applicative
+import arrow.core.extensions.list.traverse.traverse
 import kotlin.reflect.full.memberProperties
+
+
+fun createIndexes(
+        entityMaps: List<Map<String, Entity>>
+): Either<Error, List<Map<String, MutableMap<String, MutableList<String>>>>> {
+
+    // Process entity names to get the class names
+    val entityClassNames = EntityEnum.values.map { it.toLowerCase().capitalize() }
+
+    // Create the index maps as a  List<Either<Error, Map>> and traverse over the list to convert to Either<Error, List<Map>>
+    return entityMaps.mapIndexed { i, entityMap -> createIndex(entityClassNames[i], entityMap) }
+            .traverse(Either.applicative<Error>(), ::identity)
+            .fix().map { it.fix() }
+}
+
 
 /* 
 The function createIndex is used to create a map of maps, where each property of
@@ -30,7 +48,9 @@ Note that none of the entity types or their properties are hardcoded in this
 function. It relies on reflection to be able to inspect the class during
 runtime.
  */
-fun createIndex(entityType: String, entities: Map<String,Entity>): Map<String, MutableMap<String, MutableList<String>>> {
+fun createIndex(
+        entityType: String, entities: Map<String,Entity>
+): Either<Error, Map<String, MutableMap<String, MutableList<String>>>> = try {
 
     // Get the list of properties for the specified entity class (e.g. "_id", "url", etc.)
     val entityProperties = Class.forName("search.cli.$entityType").kotlin.memberProperties
@@ -62,8 +82,12 @@ fun createIndex(entityType: String, entities: Map<String,Entity>): Map<String, M
             }
         }
     }
-    return entityIndex
+    Right(entityIndex)
+
+} catch (e: ClassNotFoundException) {
+    Left(Error("Entity class $entityType does not exist: ${e.message}"))
 }
+
 
 fun addPropertyValueToIndexMap(
         entityIndex: Map<String, MutableMap<String, MutableList<String>>>,

@@ -38,7 +38,6 @@ class Prompt(
                 val relatedEntities = findEntitiesRelatedToTicket(userIndex, organizationIndex, matchingEntities as List<Ticket>)
                 prettyPrintResults(matchingEntities, relatedEntities, EntityEnum.TICKET, organizations, users, searchTerm, searchValue)
             }
-            else -> println("Invalid entity type $entity")
         }
 
         val resetSelection = getResetSelection(entity.toString().toLowerCase().capitalize())
@@ -65,6 +64,7 @@ fun getIntroSelection(init: Boolean = true): Int {
     }
 }
 
+
 fun getEntitySelection(displayFields: Boolean): EntityEnum {
     // Get the list of entity types from the EntityEnum class and print as a numbered list
     val entitySelectionText = "\nSelect entity to search \n${EntityEnum.values.mapIndexed {i, it -> "${i+1}) $it\n"}
@@ -89,6 +89,7 @@ fun getEntitySelection(displayFields: Boolean): EntityEnum {
     }
 }
 
+
 fun getSearchTerm(entity: String, displayFields: Boolean = false): String {
     val entityFields = if (displayFields) printSearchableFields(entity) else ""
     val searchTerm = TermUi.prompt("${entityFields}\nEnter search term for $entity", "")
@@ -99,13 +100,12 @@ fun getSearchTerm(entity: String, displayFields: Boolean = false): String {
     }
 }
 
+
 fun getSearchValue(searchTerm: String, entity: String): String {
     val searchValue = TermUi.prompt("\nEnter search value for $entity $searchTerm", default = "NULL_OR_EMPTY", showDefault = false)
     return if (searchValue.isNullOrEmpty()) getSearchValue(searchTerm, entity) else searchValue
 }
 
-fun getResults(searchValue: String, searchTerm: String, entity: String): String
-    = "Results for searching $entity $searchTerm $searchValue"
 
 fun getResetSelection(entity: String): Int {
     val resetSelection = TermUi.prompt("Enter 1 to search $entity again, or 2 to restart from the start")
@@ -115,4 +115,3 @@ fun getResetSelection(entity: String): Int {
         resetSelection.toInt()
     }
 }
-

@@ -1,10 +1,7 @@
 package search.cli
 
-import arrow.core.Either
-import arrow.core.Left
-import arrow.core.Right
-import arrow.core.flatMap
 import kotlin.reflect.full.memberProperties
+
 
 fun search(
         searchTerm: String,
@@ -15,6 +12,7 @@ fun search(
     val matchingIds = entityIndex.get(searchTerm)?.get(searchValue) ?: mutableListOf()
     return matchingIds.filter { entities[it] != null }.map { entities[it]!! }
 }
+
 
 fun findEntitiesRelatedToOrgs(
         userIndex: Map<String, MutableMap<String, MutableList<String>>>,
@@ -27,6 +25,7 @@ fun findEntitiesRelatedToOrgs(
         Pair(relatedUsers, relatedTickets)
     }
 }
+
 
 fun findEntitiesRelatedToUser(
         orgIndex: Map<String, MutableMap<String, MutableList<String>>>,
@@ -43,6 +42,7 @@ fun findEntitiesRelatedToUser(
     }
 }
 
+
 fun findEntitiesRelatedToTicket(
         userIndex: Map<String, MutableMap<String, MutableList<String>>>,
         orgIndex: Map<String, MutableMap<String, MutableList<String>>>,
@@ -54,6 +54,7 @@ fun findEntitiesRelatedToTicket(
         Pair(relatedOrgs, relatedUsers)
     }
 }
+
 
 fun isValidSearchTerm(searchTerm: String, entity: String): Boolean =
         Class.forName("search.cli.$entity").kotlin.memberProperties.map { it.name }.contains(searchTerm)
