@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.Left
 import arrow.core.Right
 import arrow.core.flatMap
+import kotlin.reflect.full.memberProperties
 
 fun search(
         searchTerm: String,
@@ -15,32 +16,44 @@ fun search(
     return matchingIds.filter { entities[it] != null }.map { entities[it]!! }
 }
 
-fun findEntitiesRelatedToOrg(
+fun findEntitiesRelatedToOrgs(
         userIndex: Map<String, MutableMap<String, MutableList<String>>>,
-        users: Map<String, Entity>,
         ticketIndex: Map<String, MutableMap<String, MutableList<String>>>,
-        tickets: Map<String, Entity>,
-        org: Organization
-): List<Entity> {
-    return listOf()
+        orgs: List<Organization>
+): List<Pair<MutableList<String>, MutableList<String>>> {
+    return orgs.map {
+        val relatedUsers = userIndex["organization_id"]!![it._id] ?: mutableListOf()
+        val relatedTickets = ticketIndex["organization_id"]!![it._id] ?: mutableListOf()
+        Pair(relatedUsers, relatedTickets)
+    }
 }
 
 fun findEntitiesRelatedToUser(
         orgIndex: Map<String, MutableMap<String, MutableList<String>>>,
-        orgs: Map<String, Entity>,
         ticketIndex: Map<String, MutableMap<String, MutableList<String>>>,
-        tickets: Map<String, Entity>,
-        user: User
-): List<Entity> {
-    return listOf()
+        users: List<User>
+): List<Pair<MutableList<String>, MutableList<String>>> {
+    return users.map {
+        val relatedOrgs = orgIndex["_id"]!![it.organization_id] ?: mutableListOf()
+        val relatedTicketsBySubmitterId: MutableList<String> = ticketIndex["submitter_id"]!![it._id] ?: mutableListOf()
+//        val relatedTicketsByAssigneeId: MutableList<String> = ticketIndex["assignee_id"]!![it._id] ?: mutableListOf()
+//        val relatedTicketsByReferrerId: MutableList<String> = ticketIndex["referrer_id"]!![it._id] ?: mutableListOf()
+//        val relatedTickets: MutableList<String> = mutableListOf(relatedTicketsBySubmitterId, relatedTicketsByAssigneeId, relatedTicketsByReferrerId).flatten()
+        Pair(relatedOrgs, relatedTicketsBySubmitterId)
+    }
 }
 
 fun findEntitiesRelatedToTicket(
-        orgIndex: Map<String, MutableMap<String, MutableList<String>>>,
-        orgs: Map<String, Entity>,
         userIndex: Map<String, MutableMap<String, MutableList<String>>>,
-        users: Map<String, Entity>,
-        ticket: Ticket
-): List<Entity> {
-    return listOf()
+        orgIndex: Map<String, MutableMap<String, MutableList<String>>>,
+        tickets: List<Ticket>
+): List<Pair<MutableList<String>, MutableList<String>>> {
+    return tickets.map {
+        val relatedOrgs = orgIndex["_id"]!![it.organization_id] ?: mutableListOf()
+        val relatedUsers = userIndex["_id"]!![it.submitter_id] ?: mutableListOf()
+        Pair(relatedOrgs, relatedUsers)
+    }
 }
+
+fun isValidSearchTerm(searchTerm: String, entity: String): Boolean =
+        Class.forName("search.cli.$entity").kotlin.memberProperties.map { it.name }.contains(searchTerm)

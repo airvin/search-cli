@@ -43,6 +43,7 @@ entrypoint to the application (the `main` function) is in the
 ## Assumptions
 
 - The dataset can be feasibly stored in memory on a single machine
+- The `_id` field of each entity is unique
 - Entities are related as follows:
   - Each ticket must be associated with one organization
   - Organizations can have zero or more tickets
@@ -89,7 +90,8 @@ make test
 
 ## TODO
 
-- State machine for prompt options
-- Load the list of organizations, users and tickets from file
-- Create the maps for each field
-- Implement search
+- Index null and empty string fields
+- Allow user to enter empty string for search value
+- Index flattened fields (i.e. tags and domain names)
+- Include `assignee_id` and `referrer_id` in the user-ticket relationship search
+- Implement integration tests for the prompt
