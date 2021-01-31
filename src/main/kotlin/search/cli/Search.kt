@@ -6,57 +6,41 @@ import arrow.core.Right
 import arrow.core.flatMap
 
 fun search(
-        entity: String,
         searchTerm: String,
         searchValue: String,
-        organizations: List<Organization> = listOf(),
-        users: List<User> = listOf(),
-        tickets: List<Ticket> = listOf()
-): Either<Error, List<Any>> {
-    val matchingResults = when (entity) {
-        "Organization" -> searchOrganizations(searchTerm, searchValue, organizations)
-        "User" -> searchUsers(searchTerm, searchValue, users)
-        "Ticket" -> searchTickets(searchTerm, searchValue, tickets)
-        else -> Left(Error("No entity of type $entity"))
-    }
-
-    return matchingResults.flatMap {
-        if (it.isEmpty()) Left(Error("No matching records for $entity $searchTerm $searchValue")) else Right(it)
-    }
+        entityIndex: Map<String, MutableMap<String, MutableList<String>>>,
+        entities: Map<String, Entity>
+):  List<Entity> {
+    val matchingIds = entityIndex.get(searchTerm)?.get(searchValue) ?: mutableListOf()
+    return matchingIds.filter { entities[it] != null }.map { entities[it]!! }
 }
 
-fun searchOrganizations(
-        searchTerm: String,
-        searchValue: String,
-        organizations: List<Organization>
-): Either<Error, List<Organization>> {
-    return Right(organizations.filter { it._id == searchValue })
-}
-
-fun searchUsers(
-        searchTerm: String,
-        searchValue: String,
-        users: List<User>
-): Either<Error, List<User>> {
-    return Right(users.filter { it._id == searchValue })
-}
-
-fun searchTickets(
-        searchTerm: String,
-        searchValue: String,
-        tickets: List<Ticket>
-): Either<Error, List<Ticket>> {
-    return Right(tickets.filter { it._id == searchValue})
-}
-
-fun findEntitiesRelatedToOrg(users: List<User>, tickets: List<Ticket>, org: Organization): List<Any> {
+fun findEntitiesRelatedToOrg(
+        userIndex: Map<String, MutableMap<String, MutableList<String>>>,
+        users: Map<String, Entity>,
+        ticketIndex: Map<String, MutableMap<String, MutableList<String>>>,
+        tickets: Map<String, Entity>,
+        org: Organization
+): List<Entity> {
     return listOf()
 }
 
-fun findEntitiesRelatedToUser(orgs: List<Organization>, tickets: List<Ticket>, user: User): List<Any> {
+fun findEntitiesRelatedToUser(
+        orgIndex: Map<String, MutableMap<String, MutableList<String>>>,
+        orgs: Map<String, Entity>,
+        ticketIndex: Map<String, MutableMap<String, MutableList<String>>>,
+        tickets: Map<String, Entity>,
+        user: User
+): List<Entity> {
     return listOf()
 }
 
-fun findEntitiesRelatedToTicket(orgs: List<Organization>, users: List<User>, ticket: Ticket): List<Any> {
+fun findEntitiesRelatedToTicket(
+        orgIndex: Map<String, MutableMap<String, MutableList<String>>>,
+        orgs: Map<String, Entity>,
+        userIndex: Map<String, MutableMap<String, MutableList<String>>>,
+        users: Map<String, Entity>,
+        ticket: Ticket
+): List<Entity> {
     return listOf()
 }

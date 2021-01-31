@@ -1,15 +1,15 @@
 package search.cli
 
-import arrow.core.Left
-import arrow.core.Right
-import arrow.core.flatMap
 import com.github.ajalt.clikt.output.TermUi
 import kotlin.reflect.full.memberProperties
 
-class PromptStateMachine(
-        val organizations: List<Organization>,
-        val users: List<User>,
-        val tickets: List<Ticket>
+class Prompt(
+        val organizations: Map<String, Organization>,
+        val users: Map<String, User>,
+        val tickets: Map<String, Ticket>,
+        val organizationIndex: Map<String, MutableMap<String, MutableList<String>>>,
+        val userIndex: Map<String, MutableMap<String, MutableList<String>>>,
+        val ticketIndex: Map<String, MutableMap<String, MutableList<String>>>
 ) {
 
     fun init() {
@@ -21,14 +21,23 @@ class PromptStateMachine(
     fun handleSearchOptions(entity: String) {
         val searchTerm = getSearchTerm(entity)
         val searchValue = getSearchValue(searchTerm, entity)
-        val results = search(entity, searchTerm, searchValue, organizations, users, tickets).flatMap { matchedEntities ->
-            when(entity) {
-                "Organization" -> Right(matchedEntities + matchedEntities.map { findEntitiesRelatedToOrg(users, tickets, it as Organization) })
-                "User" -> Right(matchedEntities +  matchedEntities.map { findEntitiesRelatedToUser(organizations, tickets, it as User) })
-                "Ticket" -> Right(matchedEntities + matchedEntities.map{ findEntitiesRelatedToTicket(organizations, users, it as Ticket) })
-                else -> Left(Error("No entity of type $entity"))
-            }
-        }.fold({it.message}, {it.toString()})
+        val matchingEntities: List<Entity> = when(entity) {
+            "Organization" -> search(searchTerm, searchValue, organizationIndex, organizations)
+            "User" -> search(searchTerm, searchValue, userIndex, users)
+            "Ticket" -> search(searchTerm, searchValue, ticketIndex, tickets)
+            else -> listOf()
+        }
+        val relatedEntities: List<Entity> = when(entity) {
+            "Organization" -> matchingEntities.flatMap {
+                findEntitiesRelatedToOrg(userIndex, users, ticketIndex, tickets, it as Organization) }
+            "User" -> matchingEntities.flatMap {
+                findEntitiesRelatedToUser(userIndex, users, ticketIndex, tickets, it as User) }
+            "Ticket" -> matchingEntities.flatMap {
+                findEntitiesRelatedToTicket(userIndex, users, organizationIndex, organizations, it as Ticket)}
+            else -> listOf()
+        }
+        val results = (matchingEntities + relatedEntities).joinToString()
+
         println(results)
         val resetSelection = getResetSelection(entity)
         if (resetSelection == 1) handleSearchOptions(entity) else init()
@@ -55,11 +64,11 @@ fun getIntroSelection(init: Boolean = true): Int {
 }
 
 fun getEntitySelection(displayFields: Boolean): String {
-    val entitySelectionText = "Select entity to search \n${Entity.values.mapIndexed {i, it -> "${i+1}) $it\n"}
+    val entitySelectionText = "Select entity to search \n${EntityEnum.values.mapIndexed {i, it -> "${i+1}) $it\n"}
             .reduce { acc, it -> acc + it }}"
 
     val entityFields = if (displayFields) {
-        Entity.values.map { printSearchableFields(it) }
+        EntityEnum.values.map { printSearchableFields(it) }
                 .reduce {acc, it -> acc + it} + "\n"
     } else ""
 
@@ -67,12 +76,12 @@ fun getEntitySelection(displayFields: Boolean): String {
 
     return if (entitySelection == null
             || entitySelection.toIntOrNull() == null
-            || entitySelection.toInt() > Entity.values().size
-            || Entity.getByInt(entitySelection.toInt()) == null
+            || entitySelection.toInt() > EntityEnum.values().size
+            || EntityEnum.getByInt(entitySelection.toInt()) == null
     ) {
         getEntitySelection(false)
     } else {
-        Entity.getByInt(entitySelection.toInt())!!.toString().toLowerCase().capitalize()
+        EntityEnum.getByInt(entitySelection.toInt())!!.toString().toLowerCase().capitalize()
     }
 }
 
@@ -121,3 +130,5 @@ fun printSearchableFields(entity: String): String {
 
 fun isValidSearchTerm(searchTerm: String, entity: String): Boolean =
      Class.forName("search.cli.$entity").kotlin.memberProperties.map { it.name }.contains(searchTerm)
+
+fun prettyPrintEntity(entity: Entity): String = "testing!"

@@ -1,32 +1,41 @@
 package search.cli
 
-enum class Entity {
+
+enum class EntityEnum {
     USER, TICKET, ORGANIZATION;
 
     companion object {
         val values = values().map { it.toString().toLowerCase().capitalize() }
+
         // TODO: import arrow to use the either type for error handling here
-        fun getByInt(i: Int) = values().getOrNull(i-1)
+        fun getByInt(i: Int) = values().getOrNull(i - 1)
     }
 }
 
+sealed class Entity(
+        open val _id: String,
+        open val url: String?,
+        open val external_id: String?,
+        open val created_at: String?) {
+}
+
 data class Organization(
-        val _id: String,
-        val url: String?,
-        val external_id: String?,
-        val created_at: String?,
+        override val _id: String,
+        override val url: String?,
+        override val external_id: String?,
+        override val created_at: String?,
         val tags: List<String>?,
         val name: String?,
         val domain_names: List<String>?,
         val details: String?,
         val shared_tickets: Boolean?
-)
+) : Entity(_id, url, external_id, created_at)
 
 data class Ticket(
-        val _id: String,
-        val url: String?,
-        val external_id: String?,
-        val created_at: String?,
+        override val _id: String,
+        override val url: String?,
+        override val external_id: String?,
+        override val created_at: String?,
         val tags: List<String>?,
         val type: String?,
         val subject: String?,
@@ -40,13 +49,13 @@ data class Ticket(
         val due_at: String?,
         val via: String?,
         val requester_id: String?
-)
+) : Entity(_id, url, external_id, created_at)
 
 data class User(
-        val _id: String,
-        val url: String?,
-        val external_id: String?,
-        val created_at: String?,
+        override val _id: String,
+        override val url: String?,
+        override val external_id: String?,
+        override val created_at: String?,
         val tags: List<String>?,
         val name: String?,
         val alias: String?,
@@ -62,5 +71,5 @@ data class User(
         val organization_id: String?,
         val suspended: Boolean?,
         val role: String?
-)
+) : Entity(_id, url, external_id, created_at)
 
