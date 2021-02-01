@@ -50,7 +50,7 @@ class Prompt(
 
     /**
      * handleSearchOptions is the midpoint of the prompt state machine, after the
-     * user has selected the entity type to search
+     * user has selected the entity type to search.
      *
      * Once the users have finished their search, they can choose to restart from this point
      * or back at the initial display.
@@ -72,16 +72,29 @@ class Prompt(
         // Find the entities that relate to the matched entities and display the results in the prompt.
         when(entity) {
             EntityEnum.ORGANIZATION -> {
-                val relatedEntities = findEntitiesRelatedToOrgs(userIndex, ticketIndex, matchingEntities as List<Organization>)
-                prettyPrintResults(matchingEntities, relatedEntities, EntityEnum.ORGANIZATION, users, tickets, searchTerm, searchValue)
+                val relatedEntities = findEntitiesRelatedToOrgs(
+                        matchingEntities as List<Organization>,
+                        userIndex,
+                        ticketIndex,
+                        users,
+                        tickets)
+                prettyPrintResults(matchingEntities, relatedEntities, EntityEnum.ORGANIZATION, searchTerm, searchValue)
             }
             EntityEnum.USER -> {
-                val relatedEntities = findEntitiesRelatedToUser(organizationIndex, ticketIndex, matchingEntities as List<User>)
-                prettyPrintResults(matchingEntities, relatedEntities, EntityEnum.USER, organizations, tickets, searchTerm, searchValue)
+                val relatedEntities = findEntitiesRelatedToUsers(
+                        matchingEntities as List<User>,
+                        organizationIndex,
+                        ticketIndex,
+                        organizations,
+                        tickets)
+                prettyPrintResults(matchingEntities, relatedEntities, EntityEnum.USER, searchTerm, searchValue)
             }
             EntityEnum.TICKET -> {
-                val relatedEntities = findEntitiesRelatedToTicket(userIndex, organizationIndex, matchingEntities as List<Ticket>)
-                prettyPrintResults(matchingEntities, relatedEntities, EntityEnum.TICKET, organizations, users, searchTerm, searchValue)
+                val relatedEntities = findEntitiesRelatedToTickets(
+                        matchingEntities as List<Ticket>,
+                        organizations,
+                        users)
+                prettyPrintResults(matchingEntities, relatedEntities, EntityEnum.TICKET, searchTerm, searchValue)
             }
         }
 
@@ -142,7 +155,7 @@ fun getEntitySelection(displayFields: Boolean): EntityEnum {
             || entitySelection.toInt() > EntityEnum.values().size
             || EntityEnum.getByInt(entitySelection.toInt()) == null
     ) {
-        println("\n${PromptDisplay.ansi_red}$entitySelection is an invalid choice${PromptDisplay.ansi_reset}")
+        println("\n${PromptDisplay.ansiRed}$entitySelection is an invalid choice${PromptDisplay.ansiReset}")
         getEntitySelection(false)
     } else {
         EntityEnum.getByInt(entitySelection.toInt())!!

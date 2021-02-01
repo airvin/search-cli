@@ -26,7 +26,7 @@ class App : CliktCommand() {
         }.mapLeft {
             // If loadFiles or createIndexes has returned a Left(Error)), it means there has been
             // an unrecoverable failure, so print the error message and exit the application.
-            println("${PromptDisplay.ansi_red}${it.message}${PromptDisplay.ansi_reset}")
+            println("${PromptDisplay.ansiRed}${it.message}${PromptDisplay.ansiReset}")
 
             exitProcess(1)
         }
