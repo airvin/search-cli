@@ -163,8 +163,8 @@ fun getSearchTerm(entity: String, displayFields: Boolean = false): String {
 
     // If entered text is not a valid search term, display a warning and recursively call the function to display the
     // valid search term options and prompt the user for input.
-    return if (searchTerm == null || !isValidSearchTerm(searchTerm, entity)) {
-        println("\n${PromptDisplay.ansi_red}$searchTerm is an invalid choice${PromptDisplay.ansi_reset}")
+    return if (searchTerm == null || (searchTerm.isNotEmpty() && !isValidSearchTerm(searchTerm, entity))) {
+        println("\n${PromptDisplay.ansiRed}$searchTerm is an invalid choice${PromptDisplay.ansiReset}")
         getSearchTerm(entity, true)
 
     // If the user has pressed enter, don't display the warning but recursively call the function to display search
