@@ -50,12 +50,12 @@ fun getDisplaySearchableFields(init: Boolean = true): Boolean {
     val introduction = "\nWelcome to Zendesk Search!\n" +
             "Type 'ctrl+c' at any time to exit\n"
 
-    val intro_selection = "\n       Select search option:\n" +
+    val introSelection = "\n       Select search option:\n" +
             "       * Press 1 to search Zendesk\n" +
             "       * Press any other key to view searchable fields\n\n"
 
     val introText = if (init) introduction else ""
-    val initialSelection = TermUi.prompt(introText + intro_selection, default = "", showDefault = false)
+    val initialSelection = TermUi.prompt(introText + introSelection, default = "", showDefault = false)
 
     return (initialSelection == null || initialSelection.toIntOrNull() == null || initialSelection.toInt() != 1)
 }

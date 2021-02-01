@@ -32,7 +32,7 @@ fun loadFile(entity: String, fileName: String): Either<Error, Map<String, Entity
 
     val entitiesJson = entityClass::class.java.getResource("/$fileName.json").readText(Charsets.UTF_8)
     val entities = jsonAdapter.fromJson(entitiesJson)!!
-    Right(entities.map { it._id to it }.toMap())
+    Right(entities.map { it.id to it }.toMap())
 
 } catch (e: ClassNotFoundException) {
     Left(Error("Entity class $entity does not exist: ${e.message}"))

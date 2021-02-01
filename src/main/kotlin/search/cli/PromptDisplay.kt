@@ -87,14 +87,14 @@ fun prettyPrintOrganization(organization: Organization, orgNum: Int) {
     println("${PromptDisplay.ansi_green}********************Organization ${orgNum}********************${PromptDisplay.ansi_reset}\n")
     val orgTable = table {
         header("Field","Value")
-        row("ID", organization._id)
+        row("ID", organization.id)
         row("Name", organization.name ?: "-")
         row("Url", organization.url ?: "-")
-        row("Domain Names", organization.domain_names?.reduce {acc, it -> "$acc, $it"} ?: "-")
-        row("External ID", organization.external_id ?: "-")
-        row("Created At", organization.created_at ?: "-")
+        row("Domain Names", organization.domainNames?.reduce {acc, it -> "$acc, $it"} ?: "-")
+        row("External ID", organization.externalId ?: "-")
+        row("Created At", organization.createdAt ?: "-")
         row("Details", organization.details ?: "-")
-        row("Shared Tickets", organization.shared_tickets.toString() ?: "-")
+        row("Shared Tickets", organization.sharedTickets.toString() ?: "-")
         row("Tags", organization.tags?.reduce {acc, it -> "$acc, $it"} ?: "-")
         hints {
             alignment("Field", Table.Hints.Alignment.LEFT)
@@ -111,22 +111,22 @@ fun prettyPrintUser(user: User, userNum: Int) {
     println("${PromptDisplay.ansi_green}********************User ${userNum}********************${PromptDisplay.ansi_reset}\n")
     val userTable = table {
         header("Field", "Value")
-        row("ID", user._id)
+        row("ID", user.id)
         row("Name", user.name ?: "-")
         row("Alias", user.alias ?: "-")
         row("Url", user.url ?: "-")
-        row("External ID", user.external_id ?: "-")
-        row("Created At", user.created_at ?: "-")
+        row("External ID", user.externalId ?: "-")
+        row("Created At", user.createdAt ?: "-")
         row("Active", user.active.toString() ?: "-")
         row("Verified Tickets", user.verified.toString() ?: "-")
         row("Shared", user.shared.toString() ?: "-")
         row("Locale", user.locale ?: "-")
         row("Timezone", user.timezone ?: "-")
-        row("Last Logged In At", user.last_login_at ?: "-")
+        row("Last Logged In At", user.lastLoginAt ?: "-")
         row("Email", user.email ?: "-")
         row("Phone", user.phone ?: "-")
         row("Signature", user.signature ?: "-")
-        row("Organization", user.organization_id ?: "-")
+        row("Organization", user.organizationId ?: "-")
         row("Tags", user.tags?.reduce {acc, it -> "$acc, $it"} ?: "-")
         row("Suspended", user.suspended.toString() ?: "-")
         row("Role", user.role ?: "-")
@@ -145,18 +145,18 @@ fun prettyPrintTicket(ticket: Ticket, ticketNum: Int) {
     println("${PromptDisplay.ansi_green}********************Ticket ${ticketNum}********************${PromptDisplay.ansi_reset}\n")
     val ticketTable = table {
         header("Field", "Value")
-        row("ID", ticket._id)
+        row("ID", ticket.id)
         row("Subject", ticket.subject ?: "-")
         row("Type", ticket.type ?: "-")
         row("Url", ticket.url ?: "-")
-        row("External ID", ticket.external_id ?: "-")
-        row("Created At", ticket.created_at ?: "-")
+        row("External ID", ticket.externalId ?: "-")
+        row("Created At", ticket.createdAt ?: "-")
         row("Priority", ticket.priority ?: "-")
         row("Status", ticket.status.toString() ?: "-")
         row("Description", ticket.description ?: "-")
-        row("Submitter ID", ticket.submitter_id ?: "-")
-        row("Assignee ID", ticket.assignee_id ?: "-")
-        row("Organization", ticket.organization_id ?: "-")
+        row("Submitter ID", ticket.submitterId ?: "-")
+        row("Assignee ID", ticket.assigneeId ?: "-")
+        row("Organization", ticket.organizationId ?: "-")
         row("Tags", ticket.tags?.reduce {acc, it -> "$acc, $it"} ?: "-")
         hints {
             alignment("Field", Table.Hints.Alignment.LEFT)
@@ -184,7 +184,7 @@ fun prettyPrintRelatedOrgs(organization: Organization?) {
         // Using kformat table to build formatted table
         val orgTable = table {
             header("ID", "Name")
-            row(organization._id, organization.name ?: "Anonymous")
+            row(organization.id, organization.name ?: "Anonymous")
 
             hints {
                 alignment("ID", Table.Hints.Alignment.LEFT)
@@ -210,7 +210,7 @@ fun prettyPrintRelatedUsers(users: List<User>) {
         // Using kformat table to build formatted table
         val userTable = table {
             header("ID", "Name", "Email")
-            users.map { row(it._id, it.name ?: "Anonymous", it.email ?: "-") }
+            users.map { row(it.id, it.name ?: "Anonymous", it.email ?: "-") }
 
             hints {
                 alignment("ID", Table.Hints.Alignment.LEFT)

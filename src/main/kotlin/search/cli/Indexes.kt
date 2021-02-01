@@ -28,7 +28,7 @@ another map as its value. This inner map has all the unique property values as
 the key, with a list of ids of the entities that have that value for its
 property. For example, organizationIndex would look something like: 
 
-"_id": {
+"id": {
     "101": ["101"],
     "102": ["102"],
     ...
@@ -52,7 +52,7 @@ fun createIndex(
         entityType: String, entities: Map<String,Entity>
 ): Either<Error, Map<String, MutableMap<String, MutableList<String>>>> = try {
 
-    // Get the list of properties for the specified entity class (e.g. "_id", "url", etc.)
+    // Get the list of properties for the specified entity class (e.g. "id", "url", etc.)
     val entityProperties = Class.forName("search.cli.$entityType").kotlin.memberProperties
             .map { it.name }
 
@@ -72,13 +72,13 @@ fun createIndex(
             // each element in the collection, (e.g. for each tag in tags)
             if (entityPropertyValue is Collection<*>) {
                 entityPropertyValue.map {
-                    addPropertyValueToIndexMap(entityIndex, propertyName, it.toString(), entity._id)
+                    addPropertyValueToIndexMap(entityIndex, propertyName, it.toString(), entity.id)
                 }
             // Also check if the value is missing for that entity
             } else if (entityPropertyValue == null || entityPropertyValue.toString().isEmpty()) {
-                addPropertyValueToIndexMap(entityIndex, propertyName, "NULL_OR_EMPTY", entity._id)
+                addPropertyValueToIndexMap(entityIndex, propertyName, "NULL_OR_EMPTY", entity.id)
             } else {
-                addPropertyValueToIndexMap(entityIndex, propertyName, entityPropertyValue.toString(), entity._id)
+                addPropertyValueToIndexMap(entityIndex, propertyName, entityPropertyValue.toString(), entity.id)
             }
         }
     }

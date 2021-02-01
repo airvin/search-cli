@@ -20,8 +20,8 @@ fun findEntitiesRelatedToOrgs(
         orgs: List<Organization>
 ): List<Pair<MutableList<String>, MutableList<String>>> {
     return orgs.map {
-        val relatedUsers = userIndex["organization_id"]!![it._id] ?: mutableListOf()
-        val relatedTickets = ticketIndex["organization_id"]!![it._id] ?: mutableListOf()
+        val relatedUsers = userIndex["organizationId"]!![it.id] ?: mutableListOf()
+        val relatedTickets = ticketIndex["organizationId"]!![it.id] ?: mutableListOf()
         Pair(relatedUsers, relatedTickets)
     }
 }
@@ -33,10 +33,10 @@ fun findEntitiesRelatedToUser(
         users: List<User>
 ): List<Pair<MutableList<String>, MutableList<String>>> {
     return users.map {
-        val relatedOrgs = orgIndex["_id"]!![it.organization_id] ?: mutableListOf()
-        val relatedTicketsBySubmitterId: MutableList<String> = ticketIndex["submitter_id"]!![it._id] ?: mutableListOf()
-//        val relatedTicketsByAssigneeId: MutableList<String> = ticketIndex["assignee_id"]!![it._id] ?: mutableListOf()
-//        val relatedTicketsByReferrerId: MutableList<String> = ticketIndex["referrer_id"]!![it._id] ?: mutableListOf()
+        val relatedOrgs = orgIndex["id"]!![it.organizationId] ?: mutableListOf()
+        val relatedTicketsBySubmitterId: MutableList<String> = ticketIndex["submitterId"]!![it.id] ?: mutableListOf()
+//        val relatedTicketsByAssigneeId: MutableList<String> = ticketIndex["assigneeId"]!![it.id] ?: mutableListOf()
+//        val relatedTicketsByReferrerId: MutableList<String> = ticketIndex["referrerId"]!![it.id] ?: mutableListOf()
 //        val relatedTickets: MutableList<String> = mutableListOf(relatedTicketsBySubmitterId, relatedTicketsByAssigneeId, relatedTicketsByReferrerId).flatten()
         Pair(relatedOrgs, relatedTicketsBySubmitterId)
     }
@@ -49,8 +49,8 @@ fun findEntitiesRelatedToTicket(
         tickets: List<Ticket>
 ): List<Pair<MutableList<String>, MutableList<String>>> {
     return tickets.map {
-        val relatedOrgs = orgIndex["_id"]!![it.organization_id] ?: mutableListOf()
-        val relatedUsers = userIndex["_id"]!![it.submitter_id] ?: mutableListOf()
+        val relatedOrgs = orgIndex["id"]!![it.organizationId] ?: mutableListOf()
+        val relatedUsers = userIndex["id"]!![it.submitterId] ?: mutableListOf()
         Pair(relatedOrgs, relatedUsers)
     }
 }

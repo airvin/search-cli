@@ -1,5 +1,7 @@
 package search.cli
 
+import com.squareup.moshi.Json
+
 
 enum class EntityEnum(val className: String) {
     ORGANIZATION("Organization"), USER("User"), TICKET("Ticket");
@@ -12,49 +14,49 @@ enum class EntityEnum(val className: String) {
 }
 
 sealed class Entity(
-        open val _id: String,
+        @Json(name = "_id") open val id: String,
         open val url: String?,
-        open val external_id: String?,
-        open val created_at: String?) {
+        @Json(name = "external_id") open val externalId: String?,
+        @Json(name = "created_at") open val createdAt: String?) {
 }
 
 data class Organization(
-        override val _id: String,
+        @Json(name = "_id") override val id: String,
         override val url: String?,
-        override val external_id: String?,
-        override val created_at: String?,
+        @Json(name = "external_id") override val externalId: String?,
+        @Json(name = "created_at") override val createdAt: String?,
         val tags: List<String>?,
         val name: String?,
-        val domain_names: List<String>?,
+        @Json(name = "domain_names") val domainNames: List<String>?,
         val details: String?,
-        val shared_tickets: Boolean?
-) : Entity(_id, url, external_id, created_at)
+        @Json(name = "shared_tickets") val sharedTickets: Boolean?
+) : Entity(id, url, externalId, createdAt)
 
 data class Ticket(
-        override val _id: String,
+        @Json(name = "_id") override val id: String,
         override val url: String?,
-        override val external_id: String?,
-        override val created_at: String?,
+        @Json(name = "external_id") override val externalId: String?,
+        @Json(name = "created_at") override val createdAt: String?,
         val tags: List<String>?,
         val type: String?,
         val subject: String?,
         val description: String?,
         val priority: String?,
         val status: String?,
-        val submitter_id: String?,
-        val assignee_id: String?,
-        val organization_id: String?,
-        val has_incidents: Boolean?,
-        val due_at: String?,
+        @Json(name = "submitter_id") val submitterId: String?,
+        @Json(name = "assignee_id") val assigneeId: String?,
+        @Json(name = "organization_id") val organizationId: String?,
+        @Json(name = "has_incidents") val hasIncidents: Boolean?,
+        @Json(name = "due_at") val dueAt: String?,
         val via: String?,
-        val requester_id: String?
-) : Entity(_id, url, external_id, created_at)
+        @Json(name = "requester_id") val requesterId: String?
+) : Entity(id, url, externalId, createdAt)
 
 data class User(
-        override val _id: String,
+        @Json(name = "_id") override val id: String,
         override val url: String?,
-        override val external_id: String?,
-        override val created_at: String?,
+        @Json(name = "external_id") override val externalId: String?,
+        @Json(name = "created_at") override val createdAt: String?,
         val tags: List<String>?,
         val name: String?,
         val alias: String?,
@@ -63,12 +65,12 @@ data class User(
         val shared: Boolean?,
         val locale: String?,
         val timezone: String?,
-        val last_login_at: String?,
+        @Json(name = "last_login_at") val lastLoginAt: String?,
         val email: String?,
         val phone: String?,
         val signature: String?,
-        val organization_id: String?,
+        @Json(name = "organization_id") val organizationId: String?,
         val suspended: Boolean?,
         val role: String?
-) : Entity(_id, url, external_id, created_at)
+) : Entity(id, url, externalId, createdAt)
 
