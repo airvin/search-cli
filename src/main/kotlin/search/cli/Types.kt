@@ -1,13 +1,12 @@
 package search.cli
 
 
-enum class EntityEnum {
-    ORGANIZATION, USER, TICKET;
+enum class EntityEnum(val className: String) {
+    ORGANIZATION("Organization"), USER("User"), TICKET("Ticket");
 
     companion object {
         val values = values().map { it.toString().toLowerCase().capitalize() }
 
-        // TODO: import arrow to use the either type for error handling here
         fun getByInt(i: Int) = values().getOrNull(i - 1)
     }
 }

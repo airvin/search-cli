@@ -13,7 +13,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 fun loadFiles()
 : Either<Error, List<Map<String, Entity>>> {
     // Process the entity names to get a pair of (className, fileName)
-    val entities = EntityEnum.values.map { Pair(it.toLowerCase().capitalize(), it.toLowerCase() + "s") }
+    val entities = EntityEnum.values.map { Pair(it, it.toLowerCase() + "s") }
 
     // Load files to get a List<Either<Error, Map>> and traverse over the list to convert to Either<Error, List<Map>>
     return entities.map { loadFile(it.first, it.second) }

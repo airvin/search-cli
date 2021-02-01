@@ -11,7 +11,7 @@ fun createIndexes(
 ): Either<Error, List<Map<String, MutableMap<String, MutableList<String>>>>> {
 
     // Process entity names to get the class names
-    val entityClassNames = EntityEnum.values.map { it.toLowerCase().capitalize() }
+    val entityClassNames = EntityEnum.values.map { it }
 
     // Create the index maps as a  List<Either<Error, Map>> and traverse over the list to convert to Either<Error, List<Map>>
     return entityMaps.mapIndexed { i, entityMap -> createIndex(entityClassNames[i], entityMap) }

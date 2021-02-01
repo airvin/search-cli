@@ -18,8 +18,8 @@ class Prompt(
     }
 
     fun handleSearchOptions(entity: EntityEnum) {
-        val searchTerm = getSearchTerm(entity.toString().toLowerCase().capitalize())
-        val searchValue = getSearchValue(searchTerm, entity.toString().toLowerCase().capitalize())
+        val searchTerm = getSearchTerm(entity.className)
+        val searchValue = getSearchValue(searchTerm, entity.className)
         val matchingEntities: List<Entity> = when(entity) {
             EntityEnum.ORGANIZATION -> search(searchTerm, searchValue, organizationIndex, organizations)
             EntityEnum.USER -> search(searchTerm, searchValue, userIndex, users)
@@ -40,7 +40,7 @@ class Prompt(
             }
         }
 
-        val resetSelection = getResetSelection(entity.toString().toLowerCase().capitalize())
+        val resetSelection = getResetSelection(entity.className)
         if (resetSelection == 1) handleSearchOptions(entity) else init()
     }
 }
@@ -92,7 +92,7 @@ fun getEntitySelection(displayFields: Boolean): EntityEnum {
 
 fun getSearchTerm(entity: String, displayFields: Boolean = false): String {
     val entityFields = if (displayFields) printSearchableFields(entity) else ""
-    val searchTerm = TermUi.prompt("${entityFields}\nEnter search term for $entity", "")
+    val searchTerm = TermUi.prompt("${entityFields}\nEnter search term for $entity or press enter to view searchable fields","")
     return if (searchTerm.isNullOrEmpty() || !isValidSearchTerm(searchTerm, entity)) {
         getSearchTerm(entity, true)
     } else {
