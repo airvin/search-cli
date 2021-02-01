@@ -20,10 +20,8 @@ class App : CliktCommand() {
             }
 
         }.mapLeft {
-            val ansi_red = "\u001B[31m"
-            val ansi_reset = "\u001B[0m"
 
-            println("${ansi_red}${it.message}$ansi_reset")
+            println("${PromptDisplay.ansi_red}${it.message}${PromptDisplay.ansi_reset}")
 
             exitProcess(1)
         }
