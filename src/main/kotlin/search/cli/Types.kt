@@ -2,7 +2,9 @@ package search.cli
 
 import com.squareup.moshi.Json
 
-
+/**
+ * EntityEnum
+ */
 enum class EntityEnum(val className: String) {
     ORGANIZATION("Organization"), USER("User"), TICKET("Ticket");
 
@@ -13,6 +15,9 @@ enum class EntityEnum(val className: String) {
     }
 }
 
+/**
+ *
+ */
 sealed class Entity(
         @Json(name = "_id") open val id: String,
         open val url: String?,
@@ -20,6 +25,9 @@ sealed class Entity(
         @Json(name = "created_at") open val createdAt: String?) {
 }
 
+/**
+ *
+ */
 data class Organization(
         @Json(name = "_id") override val id: String,
         override val url: String?,
@@ -32,6 +40,9 @@ data class Organization(
         @Json(name = "shared_tickets") val sharedTickets: Boolean?
 ) : Entity(id, url, externalId, createdAt)
 
+/**
+ *
+ */
 data class Ticket(
         @Json(name = "_id") override val id: String,
         override val url: String?,
@@ -52,6 +63,9 @@ data class Ticket(
         @Json(name = "requester_id") val requesterId: String?
 ) : Entity(id, url, externalId, createdAt)
 
+/**
+ *
+ */
 data class User(
         @Json(name = "_id") override val id: String,
         override val url: String?,

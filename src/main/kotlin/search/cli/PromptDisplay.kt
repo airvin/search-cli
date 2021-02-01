@@ -29,7 +29,7 @@ class PromptDisplay() {
  * @param entity    A string representing the entity class (e.g. "Organization")
  * @return      Returns a stringified list of the properties of the entity with a header.
  */
-fun getSearchableFields(entity: String): String {
+fun getSearchableFields(entity: String): String = try {
 
     val header = PromptDisplay.ansiGreen +
             "\n--------------------------------------\n" +
@@ -41,7 +41,9 @@ fun getSearchableFields(entity: String): String {
             .map { it.name }
             .reduce {acc, it -> acc + "\n" + it}
 
-    return "$header $entityProperties \n"
+    "$header $entityProperties \n"
+} catch (e: ClassNotFoundException) {
+    PromptDisplay.ansiRed + "Error displaying fields. $entity is not a valid entity class\n" + PromptDisplay.ansiReset
 }
 
 /**

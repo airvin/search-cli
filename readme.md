@@ -131,16 +131,15 @@ build the documentation, run:
 make docs
 ```
 
-This generates `gfm` and `javadoc` folders in `build/dokka` to accomodate for
+This generates `gfm` and `javadoc` folders in `build/dokka` to accommodate for
 different perusal preferences. The `gfm` (GitHub markdown-like) can be viewed
-using a tool that renders markdown through the `index.md` file. The `javadoc`
+using any tool that renders markdown through the `index.md` file. The `javadoc`
 version can be viewed in the browser through the `index.html` file.
 
 ## TODO
-
-- Check if key exists in entity map and return an error if so.
-- Finish documentation
-- Include `assigneeId` and `referrerId` in the user-ticket relationship search
-- Error handling - wherever reflection is used
+- Finish documentation for Types file
+- Increase code test coverage - tests for Prompt and PromptDisplay
 - Add ability to quit with "quit"
+- When building entity maps, check if key already exists in map and return an error if so.
+- Error handling - wherever reflection is used
 - Implement integration tests for the prompt

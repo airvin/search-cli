@@ -68,8 +68,8 @@ fun createIndexes(
  * @param entities         A map of all the entities of that type that were loaded into the application,
  *                          with the entity unique identifier as the key.
  * @return      Returns an Either that is Left in the case that the input entityType is not a
- *              valid class on the classpath, or a Right with the index map in the successful
- *              case.
+ *              valid class on the classpath or the entity class name does not match the type of
+ *              entity in the entities map. Returns a Right with the index map in the successful case.
  */
 fun createIndex(
         entityType: String, entities: Map<String,Entity>
@@ -109,6 +109,8 @@ fun createIndex(
 
 } catch (e: ClassNotFoundException) {
     Left(Error("Entity class $entityType does not exist: ${e.message}"))
+} catch (e: NoSuchElementException) {
+    Left(Error("$entityType does not match the entity type in the provided map: ${e.message}"))
 }
 
 /**

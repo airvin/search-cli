@@ -5,6 +5,60 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class IndexesTest {
+
+    // Happy cases
+
+    @Test fun testCreatingIndexes() {
+        val organizations = createMockOrganizations()
+        val users = createMockUsers()
+        val tickets = createMockTickets()
+
+        val indexes = createIndexes(listOf(organizations, users, tickets))
+
+        assertTrue(indexes.isRight())
+        indexes.map {
+            assertTrue(it.isNotEmpty())
+
+            // Test Organization index map
+            assertNotNull(it[0])
+            assertTrue(it[0].containsKey("id"))
+            assertNotNull(it[0]["id"])
+            assertTrue(it[0]["id"]!!.containsKey("001"))
+            assertTrue(it[0]["id"]!!["001"]!!.contains("001"))
+
+            assertTrue(it[0].containsKey("name"))
+            assertNotNull(it[0]["name"])
+            assertTrue(it[0]["name"]!!.containsKey("AliceCorp"))
+            assertTrue(it[0]["name"]!!["AliceCorp"]!!.contains("001"))
+
+            // Test User index map
+            assertNotNull(it[1])
+            assertTrue(it[1].containsKey("id"))
+            assertNotNull(it[1]["id"])
+            assertTrue(it[1]["id"]!!.containsKey("0001"))
+            assertTrue(it[1]["id"]!!["0001"]!!.contains("0001"))
+
+            assertTrue(it[1].containsKey("name"))
+            assertNotNull(it[1]["name"])
+            assertTrue(it[1]["name"]!!.containsKey("Alice"))
+            assertTrue(it[1]["name"]!!["Alice"]!!.contains("0001"))
+
+            // Test Ticket index map
+            assertNotNull(it[2])
+            assertTrue(it[2].containsKey("id"))
+            assertNotNull(it[2]["id"])
+            assertTrue(it[2]["id"]!!.containsKey("00001"))
+            assertTrue(it[2]["id"]!!["00001"]!!.contains("00001"))
+
+            assertTrue(it[2].containsKey("subject"))
+            assertNotNull(it[2]["subject"])
+            assertTrue(it[2]["subject"]!!.containsKey("AliceIssue"))
+            assertTrue(it[2]["subject"]!!["AliceIssue"]!!.contains("00001"))
+            assertTrue(it[2]["subject"]!!.containsKey("BobIssue"))
+            assertTrue(it[2]["subject"]!!["BobIssue"]!!.contains("00002"))
+        }
+    }
+
     @Test fun testCreatingOrganizationIndex() {
 
         val organizations = createMockOrganizations()
@@ -116,6 +170,35 @@ class IndexesTest {
             assertTrue(it["description"]!!.containsKey("NULL_OR_EMPTY"))
             assertTrue(it["description"]!!["NULL_OR_EMPTY"]!!.contains("00001"))
             assertTrue(it["description"]!!["NULL_OR_EMPTY"]!!.contains("00002"))
+        }
+    }
+
+    // Unhappy cases
+
+    // Incorrect list of entity maps provided
+    @Test
+    fun testCreatingIndexesWithInvalidEntityMap() {
+        val organizations = createMockOrganizations()
+        val users = createMockUsers()
+
+        val indexesError = createIndexes(listOf(organizations, users, users))
+        assertTrue(indexesError.isLeft())
+        indexesError.mapLeft {
+            assertNotNull(it.message)
+            assertTrue(it.message!!.contains("Ticket does not match the entity type in the provided map:"))
+        }
+    }
+
+    @Test
+    fun testCreateIndexWithInvalidEntityClassname() {
+        val organizations = createMockOrganizations()
+
+        val indexError = createIndex("Invalid", organizations)
+        assertTrue(indexError.isLeft())
+
+        indexError.mapLeft {
+            assertNotNull(it.message)
+            assertTrue(it.message!!.contains("Entity class Invalid does not exist:"))
         }
     }
 }
