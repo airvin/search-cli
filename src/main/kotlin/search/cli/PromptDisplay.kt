@@ -100,6 +100,7 @@ fun prettyPrintOrganization(organization: Organization, orgNum: Int) {
             alignment("Field", Table.Hints.Alignment.LEFT)
             alignment("Value", Table.Hints.Alignment.LEFT)
             postfix(0, "    ")
+            borderStyle = Table.BorderStyle.SINGLE_LINE
         }
     }.render(StringBuilder())
 
