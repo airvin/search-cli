@@ -4,6 +4,10 @@ import arrow.core.flatMap
 import com.github.ajalt.clikt.core.CliktCommand
 import kotlin.system.exitProcess
 
+
+fun main(args: Array<String>) = App().main(args)
+
+
 class App : CliktCommand() {
     override fun run() {
 
@@ -20,14 +24,11 @@ class App : CliktCommand() {
             }
 
         }.mapLeft {
-
+            // If loadFiles or createIndexes has returned a Left(Error)), it means there has been
+            // an unrecoverable failure, so print the error message and exit the application.
             println("${PromptDisplay.ansi_red}${it.message}${PromptDisplay.ansi_reset}")
 
             exitProcess(1)
         }
     }
 }
-
-
-fun main(args: Array<String>) = App().main(args)
-

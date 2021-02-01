@@ -13,7 +13,7 @@ class SearchTest {
 
         eitherErrorOrgIndex.map { organizationIndex ->
             val idSearchResult =
-                    search("_id", "001", organizationIndex, organizations) as List<Organization>
+                    search("id", "001", organizationIndex, organizations) as List<Organization>
 
             assertNotNull(idSearchResult)
             assertTrue(idSearchResult.isNotEmpty())
@@ -21,7 +21,7 @@ class SearchTest {
             assertTrue(!idSearchResult.contains(organizations["002"]))
 
             val idMissingSearchResult =
-                    search("_id", "111", organizationIndex, organizations) as List<Organization>
+                    search("id", "111", organizationIndex, organizations) as List<Organization>
             assertNotNull(idMissingSearchResult)
             assertTrue(idMissingSearchResult.isEmpty())
         }

@@ -4,6 +4,10 @@ import de.m3y.kformat.Table
 import de.m3y.kformat.table
 import kotlin.reflect.full.memberProperties
 
+/**
+ * The PromptDisplay class is used to define the ansi colour codes used in the display to highlight
+ * important pieces of information.
+ */
 class PromptDisplay() {
     companion object {
         val ansi_red = "\u001B[31m"
@@ -14,15 +18,23 @@ class PromptDisplay() {
         val ansi_reset = "\u001B[0m"
     }
 }
-/* In order to make this application extensible, the property names that can be
-searched on should not be hard coded.
-Here, reflection is used to analyse the properties of the classes to create the
-list of searchable fields without having to hardcode any of them.
+
+/**
+ * getSearchableFields is used to examine an entity class and return the properties as a printable list.
+ *
+ * It uses reflection to find the entity class and get the list of properties for that class, without having
+ * to hardcode any of them.
+ *
+ * @param entity    A string representing the entity class (e.g. "Organization")
+ * @return      Returns a stringified list of the properties of the entity with a header.
  */
-fun printSearchableFields(entity: String): String {
-    val header = "${PromptDisplay.ansi_green}\n--------------------------------------\n" +
-            "Search ${entity}s with \n" +
-            "--------------------------------------${PromptDisplay.ansi_reset}\n"
+fun getSearchableFields(entity: String): String {
+
+    val header = PromptDisplay.ansi_green +
+            "\n--------------------------------------\n" +
+            "  Search ${entity}s with \n" +
+            "--------------------------------------\n" +
+            PromptDisplay.ansi_reset
 
 
     val entityProperties = Class.forName("search.cli.$entity").kotlin.memberProperties
@@ -32,7 +44,9 @@ fun printSearchableFields(entity: String): String {
     return "$header $entityProperties \n"
 }
 
-
+/**
+ * prettyPrintResulst
+ */
 fun prettyPrintResults(
         matchedEntities: List<Entity>,
         relatedEntities: List<Pair<MutableList<String>, MutableList<String>>>,

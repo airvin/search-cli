@@ -6,7 +6,8 @@ where tickets correspond to an organization and user.
 
 ## Building the application
 
-To build the application, use:
+This application is written in Kotlin and uses Gradle as a build tool. To build
+the executable, you will need to have a JDK (v1.8) installed. To build, use:
 
 ```
 make build
@@ -25,11 +26,10 @@ make run
 
 ## Overview of application
 
-This application is written in Kotlin and uses gradle as a build tool. The
-entrypoint to the application (the `main` function) is in the
+The entrypoint to the application (the `main` function) is in the
 `src/main/kotlin/search/cli/App.kt` file.
 
-## Requirements
+### Application Requirements
 
 - Search response times should not increase linearly as the number of documents
   grows
@@ -40,7 +40,7 @@ entrypoint to the application (the `main` function) is in the
   searching organization by id should return its tickets and users.
 - Only full value matching is allowed (e.g. "mar" won't return "mary").
 
-## Assumptions
+### Assumptions
 
 - The dataset can be feasibly stored in memory on a single machine
 - The `_id` field of each entity is unique
@@ -86,7 +86,8 @@ runtime without having to hardcode them. Examples of this can be seen in the
 While it was necessary in places to hardcode logic relating to the
 Organizations, Users and Tickets, all efforts were made to keep this isolated to
 specific areas of the code (for example, in describing the relationships between
-the entities in the `Search` file). In all other places, the `EntityEnum` class
+the entities in the `Search` file, and in describing how to print the entities
+in the `PromptDisplay` file). In all other places, the `EntityEnum` class
 was used in order to be sure that all classes of entity were handled
 appropriately.
 
@@ -102,8 +103,9 @@ Conventions:
 - Catch exceptions as close as possible to their source and convert to [Arrow's
   `Either`
   type](https://arrow-kt.io/docs/apidocs/arrow-core-data/arrow.core/-either/).
-- Implement functions as expressions. Functions that produce errors can be composed
-  using `map`, `flatMap` and `fold`. Avoid statements with side effects in functions.
+- Implement functions as expressions. Functions that produce errors can be
+  composed using `map`, `flatMap` and `fold`. Avoid statements with side effects
+  in functions.
 - Use recursion over loops.
 
 Example Gists:
@@ -119,7 +121,26 @@ To run the unit tests, use:
 make test
 ```
 
+## Documentation
+
+The application has been annotated according to `KDoc` syntax and uses
+[Dokka](https://github.com/Kotlin/dokka) to autogenerate the documentation. To
+build the documentation, run:
+
+```
+make docs
+```
+
+This generates `gfm` and `javadoc` folders in `build/dokka` to accomodate for
+different perusal preferences. The `gfm` (GitHub markdown-like) can be viewed
+using a tool that renders markdown through the `index.md` file. The `javadoc`
+version can be viewed in the browser through the `index.html` file.
+
 ## TODO
 
-- Include `assignee_id` and `referrer_id` in the user-ticket relationship search
+- Check if key exists in entity map and return an error if so.
+- Finish documentation
+- Include `assigneeId` and `referrerId` in the user-ticket relationship search
+- Error handling - wherever reflection is used
+- Add ability to quit with "quit"
 - Implement integration tests for the prompt

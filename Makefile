@@ -9,3 +9,7 @@ run:
 .PHONY: test
 test:
 	./gradlew test
+
+.PHONY: docs
+docs:
+	./gradlew dokkaGfm dokkaJavadoc

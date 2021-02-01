@@ -12,10 +12,10 @@ class IndexesTest {
 
         assertTrue(organizationIndex.isRight())
         organizationIndex.map {
-            assertTrue(it.containsKey("_id"))
-            assertNotNull(it["_id"])
-            assertTrue(it["_id"]!!.containsKey("001"))
-            assertTrue(it["_id"]!!["001"]!!.contains("001"))
+            assertTrue(it.containsKey("id"))
+            assertNotNull(it["id"])
+            assertTrue(it["id"]!!.containsKey("001"))
+            assertTrue(it["id"]!!["001"]!!.contains("001"))
 
             assertTrue(it.containsKey("name"))
             assertNotNull(it["name"])
@@ -34,11 +34,11 @@ class IndexesTest {
             assertTrue(it["details"]!!["NULL_OR_EMPTY"]!!.contains("001"))
             assertTrue(it["details"]!!["NULL_OR_EMPTY"]!!.contains("002"))
 
-            assertTrue(it.containsKey("external_id"))
-            assertNotNull(it["external_id"])
-            assertTrue(it["external_id"]!!.containsKey("NULL_OR_EMPTY"))
-            assertTrue(it["external_id"]!!["NULL_OR_EMPTY"]!!.contains("001"))
-            assertTrue(it["external_id"]!!["NULL_OR_EMPTY"]!!.contains("002"))
+            assertTrue(it.containsKey("externalId"))
+            assertNotNull(it["externalId"])
+            assertTrue(it["externalId"]!!.containsKey("NULL_OR_EMPTY"))
+            assertTrue(it["externalId"]!!["NULL_OR_EMPTY"]!!.contains("001"))
+            assertTrue(it["externalId"]!!["NULL_OR_EMPTY"]!!.contains("002"))
         }
     }
 
@@ -49,10 +49,10 @@ class IndexesTest {
 
         assertTrue(userIndex.isRight())
         userIndex.map {
-            assertTrue(it.containsKey("_id"))
-            assertNotNull(it["_id"])
-            assertTrue(it["_id"]!!.containsKey("0001"))
-            assertTrue(it["_id"]!!["0001"]!!.contains("0001"))
+            assertTrue(it.containsKey("id"))
+            assertNotNull(it["id"])
+            assertTrue(it["id"]!!.containsKey("0001"))
+            assertTrue(it["id"]!!["0001"]!!.contains("0001"))
 
             assertTrue(it.containsKey("name"))
             assertNotNull(it["name"])
@@ -87,10 +87,10 @@ class IndexesTest {
         assertTrue(ticketIndex.isRight())
 
         ticketIndex.map {
-            assertTrue(it.containsKey("_id"))
-            assertNotNull(it["_id"])
-            assertTrue(it["_id"]!!.containsKey("00001"))
-            assertTrue(it["_id"]!!["00001"]!!.contains("00001"))
+            assertTrue(it.containsKey("id"))
+            assertNotNull(it["id"])
+            assertTrue(it["id"]!!.containsKey("00001"))
+            assertTrue(it["id"]!!["00001"]!!.contains("00001"))
 
             assertTrue(it.containsKey("subject"))
             assertNotNull(it["subject"])
