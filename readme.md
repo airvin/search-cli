@@ -135,11 +135,3 @@ This generates `gfm` and `javadoc` folders in `build/dokka` to accommodate for
 different perusal preferences. The `gfm` (GitHub markdown-like) can be viewed
 using any tool that renders markdown through the `index.md` file. The `javadoc`
 version can be viewed in the browser through the `index.html` file.
-
-## TODO
-- Finish documentation for Types file
-- Increase code test coverage - tests for Prompt and PromptDisplay
-- Add ability to quit with "quit"
-- When building entity maps, check if key already exists in map and return an error if so.
-- Error handling - wherever reflection is used
-- Implement integration tests for the prompt
