@@ -215,6 +215,10 @@ fun getSearchValue(entity: String, searchTerm: String): String {
  *                  have chosen to search the entity again.
  */
 fun getRestartFromStart(entity: String): Boolean {
-    val resetSelection = TermUi.prompt("Enter 1 to search $entity again, or any other key to restart from the start")
+    val resetSelection = TermUi.prompt(
+            "Enter 1 to search $entity again, or any other key to restart from the start",
+            default = "",
+            showDefault = false
+    )
     return (resetSelection == null || resetSelection.toIntOrNull() == null || resetSelection.toInt() != 1)
 }
