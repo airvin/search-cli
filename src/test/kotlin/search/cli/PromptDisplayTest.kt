@@ -1,5 +1,6 @@
 package search.cli
 
+import arrow.core.invalid
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -9,9 +10,64 @@ class PromptDisplayTest {
     @Test fun testGetSearchableFields() {
         val searchableFields = getSearchableFields("Organization")
         assertTrue(searchableFields.isNotEmpty())
+    }
 
+    @Test fun testGetSearchableFieldsWithInvalidEntity() {
         val invalidEntity = getSearchableFields("Invalid Entity")
         assertTrue(invalidEntity.isNotEmpty())
+        assertTrue(invalidEntity.contains("Error displaying fields. Invalid Entity is not a valid entity class"))
+    }
+
+    @Test fun testPrettyPrintOrganizationResults() {
+        val organization = createMockOrganization()
+        val user = createMockUser()
+        val ticket = createMockTicket()
+        val unit = prettyPrintResults(
+                listOf(organization),
+                listOf(Pair(listOf(user), listOf(ticket))),
+                EntityEnum.ORGANIZATION,
+                "id",
+                "101")
+        assertEquals(Unit, unit)
+    }
+
+    @Test fun testPrettyPrintUserResults() {
+        val organization = createMockOrganization()
+        val user = createMockUser()
+        val ticket = createMockTicket()
+        val unit = prettyPrintResults(
+                listOf(user),
+                listOf(Pair(listOf(organization), listOf(ticket))),
+                EntityEnum.USER,
+                "id",
+                "1")
+        assertEquals(Unit, unit)
+    }
+
+    @Test fun testPrettyPrintTicketResults() {
+        val organization = createMockOrganization()
+        val user = createMockUser()
+        val ticket = createMockTicket()
+        val unit = prettyPrintResults(
+                listOf(ticket),
+                listOf(Pair(listOf(organization), listOf(user))),
+                EntityEnum.TICKET,
+                "id",
+                "00001")
+        assertEquals(Unit, unit)
+    }
+
+    @Test fun testPrettyPrintOrgResultsWithNoSearchTerm() {
+        val organization = createMockOrganization()
+        val user = createMockUser()
+        val ticket = createMockTicket()
+        val unit = prettyPrintResults(
+                listOf(organization),
+                listOf(Pair(listOf(user), listOf(ticket))),
+                EntityEnum.ORGANIZATION,
+                "id",
+                "NULL_OR_EMPTY")
+        assertEquals(Unit, unit)
     }
 
     @Test fun testPrettyPrintOrganization() {

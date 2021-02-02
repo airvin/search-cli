@@ -12,9 +12,8 @@ class PromptDisplay() {
     companion object {
         val ansiRed = "\u001B[31m"
         val ansiCyan = "\u001B[36m"
-        val ansiGreen = "\u001B[32m";
-        val ansiBlue = "\u001B[34m";
-        val ansiPurple = "\u001B[35m";
+        val ansiGreen = "\u001B[32m"
+        val ansiBlue = "\u001B[34m"
         val ansiReset = "\u001B[0m"
     }
 }
@@ -41,7 +40,7 @@ fun getSearchableFields(entity: String): String = try {
             .map { it.name }
             .reduce {acc, it -> acc + "\n" + it}
 
-    "$header $entityProperties \n"
+    header + entityProperties + "\n"
 } catch (e: ClassNotFoundException) {
     PromptDisplay.ansiRed + "Error displaying fields. $entity is not a valid entity class\n" + PromptDisplay.ansiReset
 }
@@ -186,9 +185,9 @@ fun prettyPrintUser(user: User, userNum: Int) {
         row("Url", user.url ?: "-")
         row("External ID", user.externalId ?: "-")
         row("Created At", user.createdAt ?: "-")
-        row("Active", user.active.toString() ?: "-")
-        row("Verified Tickets", user.verified.toString() ?: "-")
-        row("Shared", user.shared.toString() ?: "-")
+        row("Active", user.active?.toString() ?: "-")
+        row("Verified Tickets", user.verified?.toString() ?: "-")
+        row("Shared", user.shared?.toString() ?: "-")
         row("Locale", user.locale ?: "-")
         row("Timezone", user.timezone ?: "-")
         row("Last Logged In At", user.lastLoginAt ?: "-")
@@ -197,7 +196,7 @@ fun prettyPrintUser(user: User, userNum: Int) {
         row("Signature", user.signature ?: "-")
         row("Organization", user.organizationId ?: "-")
         row("Tags", user.tags?.reduce {acc, it -> "$acc, $it"} ?: "-")
-        row("Suspended", user.suspended.toString() ?: "-")
+        row("Suspended", user.suspended?.toString() ?: "-")
         row("Role", user.role ?: "-")
         hints {
             alignment("Field", Table.Hints.Alignment.LEFT)
@@ -239,7 +238,7 @@ fun prettyPrintTicket(ticket: Ticket, ticketNum: Int) {
         row("External ID", ticket.externalId ?: "-")
         row("Created At", ticket.createdAt ?: "-")
         row("Priority", ticket.priority ?: "-")
-        row("Status", ticket.status.toString() ?: "-")
+        row("Status", ticket.status?.toString() ?: "-")
         row("Description", ticket.description ?: "-")
         row("Submitter ID", ticket.submitterId ?: "-")
         row("Assignee ID", ticket.assigneeId ?: "-")
