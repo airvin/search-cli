@@ -83,7 +83,6 @@ class Prompt(
             EntityEnum.USER -> {
                 val relatedEntities = findEntitiesRelatedToUsers(
                         matchingEntities as List<User>,
-                        organizationIndex,
                         ticketIndex,
                         organizations,
                         tickets)

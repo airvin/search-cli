@@ -83,7 +83,6 @@ fun findEntitiesRelatedToOrgs(
  */
 fun findEntitiesRelatedToUsers(
         users: List<User>,
-        orgIndex: Map<String, MutableMap<String, MutableList<String>>>,
         ticketIndex: Map<String, MutableMap<String, MutableList<String>>>,
         orgs: Map<String, Organization>,
         tickets: Map<String, Ticket>
